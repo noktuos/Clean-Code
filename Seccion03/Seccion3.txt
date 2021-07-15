@@ -1,0 +1,275 @@
+Funciones y metodos
+    Lo visto en este modulo aplicara tanto para funciones como para metodos ya que su unica diferencia perceptible es que los metodos son solo funciones pero dentro de 
+    objetos instanciados.
+
+    Para poder llamar a una funcion/metodo limpio debemos recordar que contiene 2 partes principales
+        La funcion
+        La llamada a la funcion
+    Ambas partes deben de ser limpias y faciles de leer y faciles de detectar y seguir para otro desarrollador
+    Tanto la llamada a la misma como el codigo interno de la funcion
+        Para llamar la funcion importa mucho la cantidad y orden de los argumentos
+        Para la funcion importa mucho la longitud de la misma y el flujo interno de la misma
+
+Manten el numero de parametros bajo!
+    A mayor cantidad de parametros en una funcion se vuelve mas complejo llamarlos y mas dificil recordar cuales argumentos almacenan informacion especifica
+    sobre todo si no los nombramos correctamente
+
+    Tipos de llamada a funciones
+        -Vacio: Esta seria la mejor forma de llamar a las funciones, pero para nada la mas viable siempre.
+            user.save()
+        -1 parametro: Son faciles de llamar y faciles de entender, y una muy buena opcion.
+            log(message)
+        -2 parametros: Siguen siendo faciles de leer, pero ahora agregamos la complejidad de el ordenamiento de los argumentos, dento de lo cuales
+                       puede haber informacion que se envie en un orden incorrecto.
+            Point(10,3)
+        -3 parametros: Considerablemente mas dificil de entender y un poco mas desafiante de llamar. Evitar a ser posible
+            calc(5,10,'add')
+        - mas de 3 parametros: Dificiles de entender y de leer, y considerablemente mas complejas de llamar por la cantidad de argumentos en orden que deben ser enviados
+                               deben evitarse a ser posible.
+            coords(10,3,5,12)
+
+        Seguramente a este punto ya hemos pensado ejemplos de codigo anterior que hemos realizado y podriamos pensar
+        "de ninguna manera, hay funciones en las cuales necesito muchos parametros"
+        y veremos la manera de solucionar estos problemas de la mejor manera posible para evitar funciones de este tipo.
+
+Ejemplo de refactorizacion de funciones para minimizar la cantidad de argumentos
+    
+    function saveUser(email, password) {
+    const user = {
+        id: Math.random().toString(),
+        email: email,
+        password: password,
+    };
+
+    db.insert('users', user);
+    }
+
+    saveUser('test@test.com', 'testers');
+
+    Hasta este punto tenemos una funcion que guarda un usuario, requiere del email y de el password para crearlo.
+    Es comprensible que estamos guardando un email pero no tanto asi la password como segundo argumento
+    No es el peor ejemplo y tampoco es algo que no se pueda deducir o esperar, pero podria ser mejorado
+
+    Por ejemplo con la  siguiente funcion delegamos la creacion del usuario a otra parte del codigo, permitiendonos
+    utilizar solo un argumento en lugar de 2
+    Lo cual nos deja con una funcion mucho mas limpia para guardar un usuario, facil de llamar y de entender
+
+    function saveUser(user) {
+    db.insert('users', user);
+    }
+
+    saveUser(newUser);
+
+    Una mejor solucion a nuestro problema podria ser la siguiente, tener nuestra clase de user la cual es encargada de crear los objetos user
+
+    class User {
+    constructor(email, password) {
+        this.email = email;
+        this.password = password;
+        this.id = Math.random().toString();
+    }
+
+    save() {
+        db.insert('users', this);
+    }
+    }
+
+    const user = new User('test@test.com', 'testers');
+    user.save();
+
+    La cual puede guardar usuarios sin guardar ningun tipo de arugmento, esto porsupuesto no es tan realista dentro de un entorno en el que tengamos que crear 
+    usuarios constantemente, pero la idea es solo mostrar que podemos dejar una funcion sin argumento de alguna manera en caso de ser necesario.
+
+   Como hemos visto en los ejemplos anteriores esta bien tratar de bajar la cantidad de parametros necesarios para una funcion, pero tambien habra casos en los 
+   que no tendria nada de sentido eliminar o evitar utilizar argumentos en un orden especifico, por ejemplo una coordenada
+
+        Class{
+            constructor(x,y){
+                this.x=x;
+                this.y=y;
+            }
+        }
+        
+        const point = new Point(10,13);
+
+    En el anterior ejemplo, no tendria sentido eliminar los parametros que necesitamos ya que es obvio que para setear un punto en un plano cartesiano es necesario
+    tnato el punto x como el punto y de el mismo. y el orden en que estos se proveen.
+
+Lideando con varios parametros en una funcion
+
+    
+    class User {
+    constructor(name, age, email) {
+        this.name = name;
+        this.age = age;
+        this.email = email;
+    }
+    }
+
+    const user = new User('Max', 31, 'max@test.com');
+
+    Para crear un objeto usuario podemos ver que necesitamos 3 argumentos, pero el problema con este tipo de funciones es que importa el orden en el que se 
+    entregan los parametros a la funcion, como podemos resolver esto para manejarlo de manera mas limpia?
+
+    Agregando un solo parametro al constructor, el cual sera un hashmap o un objeto el cual no importe el orden de la informacion que le pasemos mientras pueda ser 
+    llamado por nombre de propiedad.
+
+    class User {
+    constructor(userData) {
+        this.name = userData.name;
+        this.age = userData.age;
+        this.email = userData.email;
+    }
+    }
+
+    const user = new User({ name: 'Max', email: 'max@test.com', age: 31 });
+
+    De esta manera la creacion de un usuario se vuelve mas simple al utilizar solo un objeto y el objeto puede ser creado on la informacion requierida en el orden que sera
+    mas comodo de agregar en ese momento, por lo que no tendriamos que filtrar infromacion para agregarla en orden.
+
+Funciones con parametros variantes en cantidad
+    Una excepcion a la regla de menor o igual cantidad de parametros a 3 en las funciones serian funciones como el siguiente ejemplo:
+
+        function sumUp(...numbers) {
+        let sum = 0;
+        for (const number of numbers) {
+            sum += number;
+        }
+        return sum;
+        }
+
+        const total = sumUp(10, 19, -3, 22, 5, 100);
+
+        // const total = sumUp([10, 19, -3, 22, 5, 100]);
+    En este ejemplo esta bien usar multiples parametros, ya que la sintaxis de ciertos lenguajes de programacion nos permiten agruparlos todos dentro de un array
+    aunque tambien podemos optar por enviar todo dentro de un array desde antes para evitar la sintaxis antes mencionada, cualquiera de los 2 casos es aceptable
+    en funciones como sumar una cantidad n de numeros como la funcion del ejemplo.
+
+Parametros de salida
+    Hay que tratar de evitarlos, sobre todo si estos son inesperados.
+    Ejemplo
+        createId(user) ---> En la cual esta funcion su nombre nos desinforma ya que dice ya que cambia el id del objeto user en lugar de crear un id, solo lo modifica por lo que es desinformativa
+    Una mejor manera de manejarlo podria ser cambiar su nombre a 
+        addId(user) ---> lo cual nos da una mejor lectura de que es lo que hara la funcion aunque aun asi podriamos mejorarla evitando el parametro de salida
+    La mejor solucion para un caso asi seria manejarlo con metodos dentro de el mismo objeto
+        user.addId() ---> lo cual nos da un mejor y mas claro ejemplo de que es lo que se pretende al llamar dicho metodo / funcion.
+
+Las funciones deben se pequeñas y hacer solo una cosa!
+    Una buena practica para tener codigo legible y divertido de leer es separar las funciones y que estas solo tengan una tarea en especifico, de esta manera
+    podemos manejar los errores de manera especifica y tambien podemos leer unicamente las partes del codigo que nos interesan, siendo el codigo mas descriptivo tambien al agregar
+    en los nombres de las funciones los pasos y el orden en los que estos se ejecutan.
+    (Vease ejemplo de  buena y mala funcion en el folder de la seccion 3)
+
+    Una pregunta muy comun es como elegir que separar en una funcion nueva, ya que no podemos tener una funcion por cada linea de codigo, no es realista y tampoco mantenible
+    una buena practica para manejar esto es fijarse en que operaciones a grandes razgos se estan realizando en nuestra super funcion conjunta
+        Por ejemplo
+            Validar un objeto + Guardar input de usuario
+        Esto puede separarse en 2 funciones mas pequeñas para facilitarnos la vida un poco mas, otro buen metodo es agrupar solo las lineas necesarias que se requieran para 
+        realiazar la tarea que detectamos.
+    
+Porque los niveles de abstraccion importan?
+    Otra forma de separar funciones es usar el metodo de niveles de abstraccion, la cual nos indica que una funcion solo debe de trabajar un nivel por debajo de su nombre
+    Ok, si pero en criollo que significa?
+        Un buen ejemplo de una funcion con un invel de abstraccion debajo de su nobmre seria:
+            function emailIsValid(email){
+                return email.includes('@');
+            }
+        Ya que no tiene espacio para interpretacion del resultado, sera un si o no dependiendo de el input que le demos, por o tanto es aceptable
+        Un mal ejemplo seria el siguiente:
+            function saveUser(email){
+                if(email.includes("@")){...}
+                // ...
+            }
+        Es de esperarse algun tipo de validacion antes de guardar algun objeto, pero no nos ayuda el hecho de hacerlo bajo el nombre de guardar usuario, por lo que podriamos
+        delegarselo la una funcion diferente y dejar solo los pasos de guardar al usuario dentro de la funcion.
+        Hay que tratar de no mezclar multiples niveles de abstraccion
+            Ejemplo
+                if(!email.includes("@")){
+                    console.log('invalid mail');
+                }else{
+                    const user = new User(mail)
+                    user.save()
+                }
+            Si leemos un codigo como este tendriamos que agregar mucha interpretacion de nuestra parte antes de saber que esta pasando exactamente
+            Un ejemplo bueno de esto seria:
+                if(!isEmail(email)){
+                    showError('Invalid email!');
+                }else{
+                    saveNewUser(email)
+                }
+    
+Cuando debemos de separar?
+    Manten tus funciones cortas!
+        Se debe tratar de separar el codigo si
+            - Podemos extraer en una funcion nueva multiples lineas que trabajan hacia una misma funcionalidad
+                    user.setAge(31)
+                    user.setName(Josue)
+                Puede ser convertido a 
+                    use.update({age:31,name: "Josue"})
+            - Extraer codigo que requiere mas interpretacion que el codigo que esta alrededor.
+                    if(!email.includes('@')){...}
+                        saveNewUser(email)
+                Puede ser convertido a 
+                    if(!isValid(email)) {...}
+                    saveNewUser(email)
+
+Seguir el principio DRY (Dont Repeat Yourself)
+    Significa construir codigo similar en el mismo lugar, para evitar esto podemos hacer uso de funciones en las que dependiendo de el input cambie la funcion, de esta manera
+    evitamos escribir 2 veces el codigo para hacer basicamente lo mismo.
+    Este tipo de ejemplo son muy comunes en validaciones de informacion o de extraccion de partes similares dentro de cadenas de texto para ciertos proyectos
+    Podemos encontrar ejemplos de DRY dentro de la carpeta de esta seccion 3 en Ejemplo DRY..js 
+
+No sobre hacer, Evita las extracciones inutiles
+    Si se siguen los principios siempre al pie de la letra podemos caer en el error de ser extremadamente granuales, lo cual no significa que estamos ayudando en la lectura
+    de nuestro codigo lo que termina agregando mas complejidad a nuestro script.
+        Haz elecciones razonables y no hagas extracciones si
+            - Solo se renombrara la operaciones
+            - Encontrar una nueva funcion tomara mas tiempo que leer el codigo que se piensa extraer
+            - Si tienes problemas dando nombre a una nueva funcion de codigo que pienses extraer
+        Ejemplo
+            function saveUser(){
+                const user ={
+                    email:email,
+                    password:password
+                };
+
+                database.insert(user);
+            }
+
+        Esta funcion esta bien como esta, si quisieramos aplicar de manera enfermiza y fanatica las reglas quedaria de la siguente manera
+            function saveUser(){
+                const user = buildUser(email,password);
+
+                database.insert(user);
+            }
+
+            function buildUser(email,password){
+                return{
+                    email:email,
+                    password:password
+                }
+            }
+        Lo cual no nos ayuda en basicamente nada al extraer dicha informacion
+
+Entendiendo y evitando efectos secundarios inesperados
+    Debemos tratar de mantener puras nuestras funciones, esto quiere decir que el mismo input nos de siempre el mismo output
+    Los efectos secundarios son inevitables en muchios escenarios y no necesariamente un efecto secundario es algo malo.
+        Ejemplo de funcion pura
+            function generatedId(userName){
+                const id='id_'+userName;
+                return id;
+            }
+        Ejemplo de funcion impura ya que esta aunque demos el mismo input siempre el resultado sera el mismo
+            function generatedId(userName){
+                const id=userName + Math.random().toString();
+                return id;
+            }
+
+    Que es un efecto secundario?
+        Ejemplo
+            function createUser(email,password){
+                const user = new User(email,password);
+                startSession(user);
+                return user;
+            }
+

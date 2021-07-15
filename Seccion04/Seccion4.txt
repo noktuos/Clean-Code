@@ -1,0 +1,91 @@
+Estructuras de control
+    Despues de lo visto en las secciones pasadas ahora veremos las estructuras de control ya que estas juegan un papel muy importante dentro el codigo limpio.
+    Para ser preciso se necesita evitar codigo como el siguiente
+
+        if(transactions.validation === true){
+            for(transaction in transactions){
+                if(transaction.type === 'credito'){
+                    if(transaction.bank === 'paypal'){
+                        process.payment.paypal(transaction);
+                    }
+                    if(transaction.bank === "cash"){
+                        process.payment.cash(transaction);
+                        if(Transaction.isChangeRequired === true){
+                            process.payment.change()
+                        }
+                    }
+                }
+            }
+        }
+
+    Este tipo de codigo de tipo "flecha" no se para nada deseado, es muy dificil de leer, propenso a errores y por ende no muy limpio
+
+        Tecnicas para limpiar estructuras de control
+            -Uso de funciones factory
+            -Polimorfismo
+            -Preferencia de checks positivos
+            -Uso de errores
+
+        Guardias y fallar rapido
+            Ejemplo
+                if(email.includes('@')){
+                    //hacer cosas
+                }
+            Puede funcionar si se utiliza de la siguiente manera, convirtiendo solo en informacion entrante cuando el caso no se cumpla y retornar rapido que tenemos un error y que 
+            todo el codigo interno no se ejecute. Por ende se vuelve un guardia del codigo interno
+                if(!email.includes('@')){
+                    return;
+                }
+
+        Como evitar nesteo profundo de estructuras de control
+            En este punto aplica lo visto en las secciones anteriores, ya que una de las maneras de evitar el nesteo en las estructuras de control es 
+            extrayendo a otras funciones para evitar crecer demasiado una sola.
+
+        Error handling (try/catch)
+            Un error muy comun de desarrollador es no usar los errores a nuestro favor o no usarlos lo suficiente
+            El correcto uso de errores nos ayuda a reemplazar estructuras if innecesarias y nos lleva a funciones mas enfocadas
+            Como regla de oro seria:
+                Si es un error -> conviertela en un error, no la vuelvas un if
+                Ejemplo:
+                    if(!isEmail){
+                        return {code:432, message:"invalid input"}
+                    }
+                O una mejor manera seria:
+                    const error = new Error('Invalid input');
+                    error.code = 422;
+                    throw error;
+            El manejo de errores es "una cosa" por lo que hay que tomarlo en cuenta al tenerlo dentro de nuestras funciones ya que no hacerlo entorpeceria uno de las primeras 
+            reglas que se vieron dentro del curso
+            El que una funcion contenga un try catch se vuelve una excepcion a la regla ya que se trata de tener lo que se intenta hacer y despues que hacer en caso que no
+            se pueda cumplir, pero nada mas fuera del try/catch
+
+    Uso de Funciones factory y Polimorfismo
+        Funcion factory
+            Es una funcion que su unico objetivo es crear objetos, se le da cierto input y esta a su vez nos regresa el objeto a nosotros
+                Ejemplo 
+                    function getTransactionProcessors(transaction) {
+                let processors = {
+                    processPayment: null,
+                    processRefund: null,
+                };
+                if (usesTransactionMethod(transaction, 'CREDIT_CARD')) {
+                    processors.processPayment = processCreditCardPayment;
+                    processors.processRefund = processCreditCardRefund;
+                } else if (usesTransactionMethod(transaction, 'PAYPAL')) {
+                    processors.processPayment = processPayPalPayment;
+                    processors.processRefund = processPayPalRefund;
+                } else if (usesTransactionMethod(transaction, 'PLAN')) {
+                    processors.processPayment = processPlanPayment;
+                    processors.processRefund = processPlanRefund;
+                }
+                return processors;
+                }
+            Mediante el uso de el arreglo processors, podemos asignar las funciones que sean requeridas eliminando filtros if para verificar paso por paso que hacer en
+            cada caso especifico.
+        
+        Evadir numeros magicos y strings
+            En el ejemplo anterior estabamos revisando por strings como ''PAYPAL' o 'CREDIT_CARD'
+            Esto debe evitarse en medida de lo posible, no tanto por la complejidad para leer el codigo, pero si para minimizar los errores por errores de escritura humanos
+            Para evitarlo errores humanos lo mejor seria declarar una constante global la cual solo se cree una vez y pueda ser usada multiples veces disminuyendo la 
+            probabildad de un error de tecla.
+        

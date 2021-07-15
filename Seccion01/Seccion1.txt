@@ -1,0 +1,351 @@
+El codigo limpio no es sobre si el codigo funciona o no, el clean code es que este sea legible rapidamente y descriptivo.
+
+Que es el codigo limpio?
+    - Es facil de leer y tener un significado
+    - Debe reducir la carga cognitiva al tratar de leerse y comprenderse
+    - Debe ir al grano
+    - Se debe evadir los nombres cripticos o no intuitivos, el nesteo y los codigos exageradamente grandes de codigo.
+    - Debe seguir las mejores practicas mas comunes y patrones 
+    - Debe ser divertido de escribir y de mantener
+
+Puntos Clave
+    -Nombres
+        - variables
+        - funciones
+        - clases
+    -Estructura y formato
+        - formato de codigo
+        - buenos y malos comentarios
+    -Funciones 
+        - largo de las funciones
+        - parametros
+    - Condicionales y Manejo de errores
+        - nesteo profundo
+        - No hacer error handling
+    - Classes y Estructuras de datos
+        - Distincion deficiente
+        - clases hinchadas
+    
+Soluciones
+    - Reglas y conceptos
+    - Patrones y Principios
+    - Development enfocado a el testeo
+
+Estructura del curso
+    - Problemas, reglas y conceptos
+    - Demos y Ejemplos
+    - Challenges
+
+Prerequisitos
+    - Experiencia en programacion basica requerida
+    Programas utilizados en el curso
+        - Python
+        - Javascript
+
+Clean Code vs Clean Architecture
+    - Clean Code: Como escribir codigo legible
+    - Clean Architecture: Donde escribir que codigo
+Clean Code vs Quick Code
+    - Siempre se van a encontrar maneras de mejorar el codigo con el tiempo
+    - No se puede hacer el codigo perfecto desde un inicio
+    - Conforme el proyecto evoluciona el codigo evolucionara con el
+    - Refactorizar codigo es un punto clave del clean code
+
+    El codigo debe releerse auque el proyecto este terminado para refactorizar de ser necesario
+
+    La refactorizacion de hoy nos salvara tiempo mañana
+    Una base de codigo no envejecera de buena manera ni sera mantenible si no se le cuestiona y refactoriza constantemente
+    Cuando se desee agregar algo nuevo hay que intentar mejorar el codigo ya existente en el camino.
+
+    El codigo rapido si lo vieramos en una grafica nos permitiria sacar muchisimas funcionalidades y modulos en un corto periodo de tiempo,
+    pero a la larga la constante falla de modulos y refactorizacion que se pudo haber evitado bajara la cantidad de trabajo realizado
+    y nos detendra en gran medida el avanze del proyecto.
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Dandole nombre a las cosas
+
+    Porque los nombres buenos importan?
+        Los nombres deben significar algo!
+        Deber permitirnos saber que almacenan las variables o que hacen las funciones y metodos o clases sin tanta necesidad de entrar a ver el codigo interno.
+
+        Hay diferentes maneras de nombras las cosas, y no es recomendable discutir por cual es la "mejor":"
+            
+            const admin = new Admin();   <-- Esta linea es legible como Esta
+            const admin = new AdminUser();  <--- Esta linea tambien es legible, y podriamos encontrar arugmentos para usar una o la otra
+
+            Lo mas recomendable es no sobre pensar demasiado los nombres legibles y enfocarnos concretamente en codigo no legible.
+
+    Como nombrar las cosas correctamente?
+
+        Variables y constantes
+            Son contenedores de datos
+                - De preferencia utilizar sustantivos
+                - Frases cortas con adjetivos
+                    Ejemplo:
+                        const userData = {}
+                        const isValid = {}
+        
+        Funciones y metodos
+            Son comandos o calculadores de valores
+                - usar verbos
+                - frases cortas con adjetivos
+                    Ejemplo:
+                        sendData()
+                        inputIsValid()
+
+        Clases 
+            Son usadas para crear cosas
+                - Usar sustantivos
+                - Frases cortas con sustantivos
+                    Ejemplo:
+                        class User {}
+                        class RequestBody {}
+
+    4 casings mas comunes para nombrar en programacion
+
+        snake_case
+            is_valid
+            send_response
+
+            Se usa normalmente en python
+            Para variables, funciones y metodos
+        camelCase
+            isValid
+            sendResponse
+            
+            Se usa comunmente en Java o JavaScript
+            Para variables, funciones y metodos
+        PascalCase
+            AdminRole
+            UserRepository
+
+            Se usa en Python, Java o JavaScript
+            Se usa normalmente para nombramiento de clases
+
+        kebab-case
+            <side-drawer>
+
+            Se usa por ejemplo en HTML o XML
+    
+        Estos casings no afectan directamente el clean code y podemos generarlo independientemente de cual estemos usando, pero es bueno conocerlas y saber cual
+        convencion de ellas se usan en que secciones de nuestro codigo para poder tomarlas en cuenta y utilizarlas de manera correcta dentro de nuestro codigo.
+    
+    Nombramiento de variables, constantes y propiedades
+
+        Valor de un Objeto
+            Su nombre debe describir el valor sin ser redundantes
+             Ejemplo:
+                authenticatedUser 
+                sqlDatabase
+
+        Valor de un numero o un string
+            Deben de describir el valor de igual manera sin caer en redundancia
+            Ejemplo:
+                firstName 
+                age 
+
+        *Valor de un Booleano
+            Los boolean por otro lado deben representar una pregunta que pueda ser contestada con si o no
+            Ejemplo:
+                isActiveUser
+                loggedIn
+        
+        Al buscar nombrar las variables no se trata de buscar el valor mas largo para su nombre, pero si el mas descriptivo
+        Algunas veces nombres largos son mejores, algunas no lo son, eso se ira viendo a medida que se maneje el codigo.
+
+
+    Ejemplos de variacion de nombramientos
+
+        Que se va a almacenar?
+            Un objeto de usuario(nombre, apellido, edad)
+
+        Malos nombres
+            u
+            data 
+
+        Nombres aceptables
+            userData <- es un poco redundante, ya que un objeto usuario contendria datos de el usuario
+            person
+
+        Buenos nombres
+            user <- es descriptivo
+            costumer <- es aun mas descriptivo de que tipo de usuario es
+
+        Los nombres considerador aceptables y buenos pueden ser de mayor utilidad en diferentes escenarios, los nombres malos por lo general no nos ayudarian mucho independientemente
+        de la situacion
+
+    Ejemplo 2 
+
+        Que se va a almacenar?
+           Un input de usuario (true/false)
+
+        Malos nombres
+            v 
+            val  
+
+        Nombres aceptables
+            correct <- nos sirve pero no nos especifica que esta correcto y sin el contexto adecuado puede no ser tan buena idea
+            validatedInput <- puede confundirse de si contiene la validacion o informacion referente a la validacion
+
+        Buenos nombres
+            isCorrect
+            isValid
+
+        Los nombres considerador aceptables y buenos pueden ser de mayor utilidad en diferentes escenarios, los nombres malos por lo general no nos ayudarian mucho independientemente
+        de la situacion
+
+    
+    Nombramiento de funciones y metodos
+
+        Funcion que realiza una operacion
+            Debe describir la operacion
+                getUser()
+                response.send()
+            Podemos mejorar los nombres sin redundar especificando un poco mas, por ejemplo
+                getUserByEmail()
+                response.send()
+
+        Funciones que computa un boolean
+            La funcion no debe describir la operacion si no el resultado (es de los unicos casos en los que sera de esta manera)
+                isValid()
+                purchase.isPaid()
+            De igual manera podemos agregar informacion para mejorar la lectura de las funciones
+                emailIsValid()
+                purchase.isPaid()
+
+        Ejemplos
+
+
+        Que va a realizar la funcion?
+            guardar datos de un usuario a base de datos
+
+        Malos nombres
+            process()
+            handle()
+            Estos son nombres para nada especificos de que se esta processando o handleando
+        Nombres aceptables
+            save()
+            storeData()
+            Estos nombres estan medianamente bien, sabemos que guardamos algo, pero que?
+
+        Buenos nombres
+            saveUser()
+            user.store()
+            La intencion esta clara y es facil de leer
+        
+    Nombramiento de clases
+        Siempre debemos describir el objeto, por lo general las clases se usan para instanciar objetos y por lo tanto, el nombre debe tratar 
+        de ser descriptivo en cuanto a los objetos que va a crear.
+            Ejemplos:
+                User -> Cliente   En este caso una clase usuario puede convertirse en algo mas especifico como un usuario cliente para diferenciarlo de los demas.
+                Product -> Curso  En este otro caso el producto se puede volver autodescriptivo en cuanto a que tipo de producto se refiere.
+
+            Ejemplos
+                Que va a realizar la clase?
+                    Instanciar un usuario
+
+                Malos nombres
+                    usr
+                    ObjA
+                    Estos son nombres para nada especificos de que se estaria creando
+                Nombres aceptables
+                    UserObj
+                    AppUser
+                    Estos nombres estan medianamente bien, sabemos que instanciamos usuarios pero es algo inespecifico
+
+                Buenos nombres
+                    User
+                    Admin
+                    La intencion esta clara y es facil de leer
+
+            Ejemplo 2
+                Que va a realizar la clase?
+                    Instanciar una base de datos
+
+                Malos nombres
+                    datastorage
+                    datab1
+                    Estos son nombres para nada especificos de que se estaria creando
+                Nombres aceptables
+                    Db
+                    Data
+                    Estos nombres estan medianamente bien, sabemos que instanciamos usuarios pero es algo inespecifico
+
+                Buenos nombres
+                    Database
+                    MySQLDatabase
+                    La intencion esta clara y es facil de leer
+
+    Excepciones de las que hay que tener cuidado
+        
+        Se debe intentar seguir las convenciones de nombres dentro de lo posible salvo excepciones muy especificas.
+        Como por ejemplo que el equipo de trabajo acuerde seguir unas convenciones de nombres diferentes por necesidades especificas 
+        o para evitar confuciones con codigos similares.
+        Tambien el uso de librerias esta excento de las convenciones del clean code, ya que normalmente son extensiones de codigo fuera de 
+        nuestro control y por ende no podemos cambiar los metodos y convenciones de nombres que se usan dentro de las librerias, pero si
+        podemos ayudar a volver mas legible nuestro codigo al describir con buenos nombres las variables que almacenen outputs o nombrando los metodos 
+        que utilizan este codigo ajeno.
+
+        Otra excepcion seria el nombramiento de getters y setters los cuales son accesados como una propiedad y no un metodo (Ejemplo en JS)
+            class Database {
+                private client: any;
+
+      ---------->   get connectedClient() {   
+                    if (!this.client) {
+                    throw new Error('Database not connected!');
+                    }
+                    return this.client;
+                }
+
+                connect() {
+                    // Establishing connection ...
+                    this.client = {};
+                }
+                }
+                
+    Errores Comunes y trampas
+
+        No incluir informacion redundante en los nombres
+            userWithNameAndAge = User('Max',31);
+        Debemos ser descriptivos pero tampoco explicar absolutamente todo el contenido con el nombre de la variable.
+
+        Evitar jerga
+            product.diePlease()
+            user.facePalm()
+
+        En su lugar
+            product.remove()
+            user.sendErrorMessage()
+
+        Abreviaciones no claras
+            message(n)
+            ymdt = '2021021CET'
+        En su lugar
+            message(newUser)
+            dateWithTimeZone = '20210121CET'
+
+        Desinformacion
+            userList = {ul:...,ul2:...} <-- Menciona ser una lista siendo que es un array o un diccionario
+            allAcounts = accounts.filter()  <-- Dice tener todas las cuentas, pero despues esta filtrandolas
+        En su lugar
+            userMap = {ul:...,ul2:...,}
+            filteredAccounts = accounts.filter()
+
+        Escoge nombres distintivos
+            Hay que evitar los siguientes escenarios, donde los nombres de los metodos son extremadamente parecidos y distinguirlos  claramente unos de otros
+                Hay que evitar:                               En su lugar podemos usar:
+                analytics.getDayliData(data)           --->   analytics.getDailyReport(day)
+                analytics.getDayData()                 --->   analytics.getDataForToday() 
+                analytics.getRawDailyData(day)         --->   analytics.getRawDailyData(data)
+                analytics.getParsedDailyData(day)      --->   analytics.getParsedDailyData(day)
+            
+
+        Hay que ser consistentes
+            Podemos tener diferentes nombres para hacer ciertas acciones
+                getUsers()
+                fetchUsers()
+                retrieveUsers()
+            Cualquiera de estas nos serviria para nombrar, el problema es ta cuando no seguimos el mismo patron y utilizamos todas en diferentes partes de nuestro codigo
+            Hay que intentar en medida de lo posible el adherirnos a una y utilizar solo ese tipo de nombre para acciones parecidas dentro de todo nuestro codigo.
+            

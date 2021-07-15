@@ -1,0 +1,178 @@
+Clases y Objetos
+
+    Manten tus clases limpias!
+    
+    La diferencia entre Objetos y estructuras de datos
+        Los objetos esconde sus metodos y propiedades teniendo la posibilidad de hacerlos privados y solo expone unos pocos mediante un API y unos pocos metodos. y contienen nuestra
+        logica de negocio en la Prorgamacion Orientada a Objetos
+        comunmente usa abstracciones sobre concretaciones, lo que quiere decir que describe la tarea que va a realizar su funcion y no nos interesa mucho la logica interna
+        de como el objeto resuelve la funcion.
+            Ejemplo
+                class Database{
+                    private uri:url;
+                    private provider:any;
+
+                    constructor(uri: string, provider: any){
+                        this._uri = uri;
+                        this._uri = uri;
+                    }
+
+                    connect(){
+                        try{
+                            this.connection = this.provider.establishConnection(this.url);
+                        }catch(){
+                            throw new Error('Could not connect');
+                        }
+                    }
+
+                    disconnect(){
+                        this.connection.close();
+                    }
+                }
+
+        Las estructuras de datos son publicas son contenedores de datos usados para almacenar y transportar datos
+        Las estructuras de datos son concretaciones solamente, donde tenemos la informacion almacenada, accesso a ella, no le decimos a un contenedor que hacer con ella
+        solo la utilizamos de la manera que mas nos convenga.
+    	    Ejemplo
+                class UserCredentials{
+                    public email:string;
+                    public password: string;
+                }
+    
+    Porque esto es importante
+        Porque estaremos escribiendo mal codigo si revolvemos estos conceptos, digamos que tenemos la clase de database del ejemplo anterior
+        en esa clase tenemos todo lo que necesitamos y podemos usarla para instanciar, conectarnos y desconectarnos, si la utilizamos mas publicamente
+        podriamos comenzar a tener problemas dentro de nuestra clase y tener que hacer mas diferenciaciones y tener mas cosas en mente al momento de estar llamando las
+        conexiones.
+
+    Polimorfismo
+        Se refiere a un objeto o un metodo que mantiene la misma estructura, mismo nombre pero puede realizar diferentes funciones dependiendo la forma en la que fue creado,
+        este es un concepto poderoso ya que nos puede ayudar a evitar duplicacion de codigo, esto tambien puede aplicarse al trabajar con clases.
+        Esto puede lograrse a traves de la herencia entre clases
+
+            class Delivery{
+                private purchase:Purchase;
+                
+                constructor(){
+                    this._purchase=purchase;
+                }
+
+               deliverProduct() {
+                    if (this.purchase.deliveryType === 'express') {
+                        Logistics.issueExpressDelivery(this.purchase.product);
+                    } else if (this.purchase.deliveryType === 'insured') {
+                        Logistics.issueInsuredDelivery(this.purchase.product);
+                    } else {
+                        Logistics.issueStandardDelivery(this.purchase.product);
+                    }
+               }
+
+               trackProduct() {
+                    if (this.purchase.deliveryType === 'express') {
+                        Logistics.trackExpressDelivery(this.purchase.product);
+                    } else if (this.purchase.deliveryType === 'insured') {
+                        Logistics.trackInsuredDelivery(this.purchase.product);
+                    } else {
+                        Logistics.trackStandardDelivery(this.purchase.product);
+                    }
+                }
+            }
+
+            Creando una clase extra de un tipo de delivery, podemos ejecutar solamente el codigo que necesitamos para este tipo de envio, podiendo usar las propiedades y 
+            metodos de nuestra clase padre Delivery debido al extends.
+
+            class InsuredDelivery extends Delivery{
+                
+                deliverProduct(){
+                    Logistics.issueExpressDelivery(this.purchase.product);  //Sin el extends no seriamos capaces de usar la propiedad pruchase de la clase Delivery
+                }
+            }
+
+            De esta manera no necesitariamos mas las clases de deliverProduct ni trackProduct dentro de la clase padre delivery y podriamos usar las de el objeto que requiramos 
+            en el momento.
+                Ejemplo 
+                    let delivery: Delivery;
+                    delivery = new InsuredDelivery({object parameters})
+
+            Otra opcion que se podria utilizar seria usar una clase de interfaz, en la cual nosotros creamos los metodos a utilizar y podemos acceder a ellos y sobre escribir su
+            funcion en nuestra clase que la use, utilizando la palabra implements para poder acceder a los metodos de la interfaz.
+            (Ver ejemplos de js y ts de la seccion 5)
+            Tener en cuenta que es solo pseudo codigo y no compilara correctamente.
+
+
+    Clases
+        Las clases deben de ser pequeñas, es muy preferible un monton de clases pequeñas a unas pocas clases extremadamente grandes.
+        Las clases deben segir el SRP (Single Responsability Principle) lo cual nos indica que cada clase debe tener solo una responsabilidad
+            Por ejemplo
+                Una clase Product sera solo responsable de cosas relacionadas a Productos
+        Una clase puede estar perfectamente identada, con multiples funciones con una sola linea de codigo que puede llegar a ser una cantidad infima de lineas
+        de codigo real, pero sera aun asi considerada ser muy grande por todas las responsabilidades que esta clase tiene (vease ejemplo claseGrande.ts)
+        En contraparte esta el archivo ClaseReducidaCorrecta.ts la cual demuestra una mejor ditribucion de las tareas en clases.
+
+        Una diferencia crucial es que no debemos tratarlas como a las funciones buscando solo tener un metodo / funcion dentro de si, si no que solo se ocupen de la 
+        responsabilidad y tareas relacionadas a su objeto.
+
+    
+    Entendiendo la cohesion.
+            Este termino se refiere a que tanto los metodos de la clase estan usando las propiedades de la misma.
+            Se tendria una maxima cohesion si todos los metodos contenidos en nuestra clase usaran todos y cada uno de las propiedades de la misma, por ende tendriamos un objeto
+            con cohesion maxima.
+
+            Por el lado contrario tendriamos la cohesion cero, en la que ningun metodo de nuestra clase hace uso o interactua con las propiedades de nuestra clase.
+            Si este es el caso podriamos denominar a esa clase como una estructura de datos mas que como una clase de objeto.
+
+            Nuestro objetivo es tener una cohesion alta, ya que rara vez, muy rara vez podriamos tener una cohesion maxima trabajando con codigo en la vida real.
+    
+    La ley de demeter y porque deberiamos "Decir, no preguntar"
+
+        Que es?
+            esta relacionada con codigo como este   
+                this.customer.lastPruchase.date;
+            En este ejemplo estamos accediendo al objeto customer, luego en sus propiedades a la propiedad lastPurchase y luego dentro de ese otro objeto a el date.
+            Escarvar entre multiples profundidaes de objetos no es recomendado por la ley de demeter ya que no se desea depender demasiado en objetos de otras clases externas
+            Esto debido a que si codigo interno de lastPurchase cambia, deberemos cambiar muchos niveles mas arriba de el codigo para que vuelva a ser funcional.
+
+        El codigo en un metodo debe solo accesar a internas directas (metodos y propiedades) de:
+            - un objeto al que pertenezca
+            - objetos que sean almacenados en las propiedades de ese objeto
+            - objetos que son recibidos como parametros
+            - objetos que son creados en el metodo interno.
+        ver ejemplo (LeyDeDemeter.ts)
+
+    
+    Principios SOLID
+        Siendo los mas importantes los primeros 2
+        S -> Single reponsability
+                Este principio trata de cuidar cuando una clase necesita cambios, por lo que si una clase tiene muchas "responsabilidades" y no solo las de el objeto que esta Creando
+                esto puede traes demasiados cambios que impacten la clase.
+                    Ejemplo de violacion de el principio SRP, como podemos ver, aunque es una clase pequeña esta incumpliendo con el principio.
+                        class ReportDocument{
+                            generateReport(data:any){}
+
+                            createPDF(report:any){}
+                        }
+
+        O -> Open-Closed Principle
+                Una clase debe estar abierta a extensiones para evitar modificaciones excesivas dentro de una clase.
+                Esto nos ayuda a mantener las clases cortas y no repetirnos lo cual desemboca en codigo mas limpio.
+
+        L -> Liskov Substitution Principle
+            Los objetos deben de ser remplazables con instancias de sus subclases sin alterar su comportamiento
+                Esto se refiere a que las clases principales no importa como sean modificadas por sus subclases, estas deberan tener un comportamiento uniforme indpendiente.
+                Por ejemplo un metodo de conectar a una base de datos deberia poder seguir con el comportamiento de conectarse independientemente si se usa mongoDB o mysql.
+                Este principio nos obliga a modelar nuestra data correctamente.
+                (vease ejemplo de LeyDeLiskov.ts)
+                
+        I -> Interface Segregation Principle
+            Muchas clases cliente especificas son mejores que una clase que haga de todo.
+                Un ejemplo seria tener una interfaz que se conecte a una bd y guarde la informacion, pero si agregamos un tipo de base de datos que no necesite conectarse
+                caemos en un problema parecido al de el principio de substitucion de liskov, para solucionarlo, deberemos separar las clases especificas para base de datos
+                que requiere de conexion y las que no.
+                (vease ejemplo de PrincipioDeSegregacionDeInterfaz.ts)
+
+        D -> Dependency Inversion Principle
+            Debemos depender de abstracciones y no concretaciones, lo cual no suena muy claro verdad?
+                
+    
+    Los primeros dos son los que mas nos importan al escribir CLEAN CODE 
+    

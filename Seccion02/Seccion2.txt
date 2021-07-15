@@ -1,0 +1,71 @@
+Seccion 2: Estructuras de codigo, comentarios y formateo
+
+Los comentarios y el formato de codigo es importante, tanto que nos puede afectar tanto positiva como negativamente dentro de nuestro proyecto
+
+Comentarios
+    Hay que evitarlos lo mas posible, son redundantes la mayoria de las veces y el texto extra solo hara que nos tardemos mas tiempo en navegar a travez del codigo y 
+    si no son utiles podrian mal informarnos sobre lo que el codigo realmente esta haciendo
+
+Malos Commentarios
+    - Cuando contienen informacion redundante acerca de lo que se quiere explicar
+    - Divisores o marcadores para bloques de codigo: Estos normalmente se usan con una buena intencion, pero generan mas contenido de lineas en los archivos de codigo y 
+      lo mejor es evitarlos lo mas posible.
+    - Comentarios engañosos (normalmente se presentan al actualizar el codigo y no actualizar los comentarios, por lo que se recomienda usar comentarios lo menos posiblep para
+       evitar estos casos).
+    -Bloques de codigo o funciones comentareadas no son para nada recomendables, para pruebas o verificacion de modulos esta bien pero nunca deben dejarse como algo permanente,
+     si no se usa se borra.
+
+Buenos Comentarios
+    - Informacion Legal
+    - Explicaciones que no se pueden dar mediante un buen manejo de nombres (expresiones regulares por ejemplo)
+    - Comentarios que te alertan sobre algo
+    - Comentarios Todo para funciones extra en caso de que no se vaya a trabajar en ese momento o futuro inmediato alguna funcion o refactorizacion que pudiera beneficiar.
+    - Comentarios para documetacion, en especial si es para API's publicas.
+
+    La regla de oro es evadir los comentarios en medida de lo posible, debemos ser capaces de crear codigo legible y transparente que sea facil de mantener.
+
+Formato de codigo
+    Ayuda a mejorar la velocidad de leido del mismo y aporta significado.
+    Existen formatos de codigo:
+        Vertical: Espacios entre las lineas, grupos de codigo.
+        Horizontal: Identacion, espacio entre el codigo y el ancho de las lineas
+    Para seguir un correcto formato de codigo hay que tener en cuenta
+        - El formato es importante e incrementa de gran manera el como leemos el codigo
+        - Las reglas de formato varian entre los diferentes lenguajes
+        - Hay que seguir los formatos especificos de cada tipo de lenguaje que estemos utilizando
+
+    Formato vertical
+        El codigo deberie de ser legible, desde la parte superior hasta la parte inferior sin muchos espacios
+            -Si el codigo se agranda y se agregan multiples conceptos, lo mejor es separar los archivos en diferentes clases
+             No hay un especifico de cuantas lineas se consideran demasiadas, pero si se tiene un archivo donde se declaran multiples clases
+             es probablemente un archivo muy grande o se convertira en uno en un futuro y lo mejor es separar los archivos por cada clase que haya dentro de el archivo 
+             inicial.
+            -Las diferentes areas de codigo deben estar separadas por espacios por ejemplo imports, metodos, clases y funciones.
+            -Areas similares no deben de estar separadas, como las que realizan la misma operacion, por ejemplo insertado de informacion, llamadas a funciones etc.
+            -Tener las areas de codigo relacionadas lo mas cercanas entre si, si en una funcion se realiza un llamado a otra, procurar tenerla justo debajo de ese metodo
+             para evitar saltar entre el codigo para buscar operaciones o funciones en caso de requerir modificacion y ser leidas de manera mas uniforme.
+                Ejemplo con JavaScript
+                start();
+
+                function start() {
+                console.log('start');
+                next();
+                }
+
+                function next() {
+                console.log('next');
+                last();
+                }
+
+                function last() {
+                console.log('last');
+                }
+    
+    Formateo Horizontal
+        Esto se refiere a las lineas de codigo en si, las cuales deben ser faciles de leer y no requerir ningun tipo de scroll de manera Horizontal
+        para que sean leidas de manera correcta.
+        -Debemos usar la identacion aunque esta no sera requerida
+        -Debemos intentar separar los statements largos en cortos para mejor comprension
+        -Usar nombres comprensibles, pero tampoco increiblemente largos de leer
+            Ejemplo
+                const storagePathForStoringImageInATemporaryFolderFor2020 = path.join();
